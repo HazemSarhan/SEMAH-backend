@@ -3,6 +3,8 @@ let prisma = new PrismaClient();
 import { StatusCodes } from 'http-status-codes';
 import BadRequestError from '../../errors/bad-request.js';
 import NotFoundError from '../../errors/not-found.js';
+import cloudinary from '../../configs/cloudinaryConfig.js';
+import fs from 'fs';
 
 export const getChats = async (req, res) => {
   const userId = req.user.userId;
@@ -139,26 +141,31 @@ export const sendMessage = async (req, res) => {
     );
   }
 
+  let fileUrl = null;
+  if (req.files && req.files.fileUrl) {
+    const result = await cloudinary.uploader.upload(
+      req.files.fileUrl.tempFilePath,
+      {
+        use_filename: true,
+        folder: 'product-images',
+      }
+    );
+    fs.unlinkSync(req.files.fileUrl.tempFilePath);
+    fileUrl = result.secure_url;
+  }
+
+  if (!content && !fileUrl) {
+    throw new BadRequestError('Message content or a file must be provided.');
+  }
+
   const message = await prisma.message.create({
     data: {
       chatId: parseInt(chatId, 10),
       sender,
-      content,
+      content: content || null,
+      fileUrl: fileUrl || null,
     },
   });
-
-  const io = req.app.get('io');
-  if (io) {
-    const x = chatId;
-    // Emit the message to all clients in the specified chat room
-    io.to(Number(chatId)).emit('receive-message', {
-      content,
-      sender: sender,
-      chatId: chatId,
-      createdAt: message.createdAt,
-    });
-    console.log('Message sent successfully');
-  }
 
   res.status(StatusCodes.CREATED).json(message);
 };
@@ -166,9 +173,9 @@ export const sendMessage = async (req, res) => {
 export const getAllChats = async (req, res) => {
   const chats = await prisma.chat.findMany({
     include: {
-      serviceItem: { select: { name: true } }, // Include service item details
-      client: { select: { name: true, email: true } }, // Include client details
-      employee: { select: { name: true, email: true } }, // Include employee details
+      serviceItem: { select: { name: true } },
+      client: { select: { name: true, email: true } },
+      employee: { select: { name: true, email: true } },
     },
   });
 

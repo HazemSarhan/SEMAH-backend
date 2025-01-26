@@ -25,6 +25,6 @@ router
 router
   .route('/:chatId/messages')
   .get(authenticatedUser, getMessages)
-  .post(authenticatedUser, validate(chatMessageSchema), sendMessage);
+  .post(authenticatedUser, sendMessage);
 
 export default router;

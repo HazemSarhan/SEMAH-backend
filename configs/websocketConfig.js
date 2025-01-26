@@ -17,22 +17,45 @@ export const initializeWebSocket = (httpServer) => {
 
     socket.on('send-message', (data) => {
       try {
-        const { chatId, content, sender, createdAt } = data;
+        const { chatId, content, sender, fileUrl, createdAt } = data;
 
         if (!chatId || !content || !sender) {
           throw new Error('Invalid message data');
         }
 
         console.log('send-message', data);
-        io.to(chatId).emit('receive-message', { content, sender, createdAt });
-        socket.emit('message-sent', {
-          status: 'success',
-          message: 'Message sent successfully',
+        io.to(Number(chatId)).emit('receive-message', {
+          content,
+          sender,
+          fileUrl,
+          createdAt,
         });
       } catch (error) {
         console.error('Error in send-message:', error.message);
         socket.emit('error', error.message);
       }
+    });
+
+    socket.on('typing', (data) => {
+      const { chatId, userId, userName } = data;
+
+      if (!chatId || !userId || !userName) {
+        return socket.emit('error', 'Invalid data for typing event');
+      }
+
+      console.log(`User ${userName} is typing in room: ${chatId}`);
+      socket.to(Number(chatId)).emit('typing', { userId, userName });
+    });
+
+    socket.on('stop-typing', (data) => {
+      const { chatId, userId } = data;
+
+      if (!chatId || !userId) {
+        return socket.emit('error', 'Invalid data for stop-typing event');
+      }
+
+      console.log(`User ${userId} stopped typing in room: ${chatId}`);
+      socket.to(Number(chatId)).emit('stop-typing', { userId });
     });
 
     socket.on('join-room', (chatId) => {
