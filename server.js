@@ -17,7 +17,7 @@ app.set('io', io);
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
-import cors from 'cors';
+import corsConfigure from './configs/corsConfig.js';
 
 // SwaggerUI
 import swaggerUI from 'swagger-ui-express';
@@ -53,14 +53,7 @@ app.set('trust proxy', 1);
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
-app.use(
-  cors({
-    origin: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    credentials: true,
-    exposedHeaders: ['Set-Cookie'],
-  })
-);
+app.use(corsConfigure());
 app.use(
   fileUpload({
     useTempFiles: true,
