@@ -17,6 +17,9 @@ const corsConfigure = () => {
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept-Version'],
     exposedHeaders: ['Set-Cookie'],
     credentials: true,
+    preflightContinue: false,
+    maxAge: 600,
+    optionsSuccessStatus: 204,
   });
 };
 
