@@ -78,3 +78,20 @@ export const deleteConsultation = async (req, res) => {
   });
   res.status(StatusCodes.OK).json({ msg: 'Consultation has been deleted!' });
 };
+
+export const getPaidConsultations = async (req, res) => {
+  const { appointmentSubject } = req.query;
+
+  const priceFilter =
+    appointmentSubject === 'PAID_CONSULTATION' ? { gt: 0 } : { equals: 0 };
+
+  const consultations = await prisma.consultation.findMany({
+    where: {
+      price: priceFilter,
+    },
+    include: {
+      Appointments: true,
+    },
+  });
+  res.status(200).json(consultations);
+};

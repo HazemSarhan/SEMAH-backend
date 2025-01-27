@@ -5,6 +5,7 @@ import {
   getConsultationById,
   updateConsultation,
   deleteConsultation,
+  getPaidConsultations,
 } from '../../controllers/appointments/consultation.controller.js';
 import {
   authenticatedUser,
@@ -16,6 +17,10 @@ router
   .route('/consultation')
   .post([authenticatedUser, authorizePermissions('ADMIN')], createConsultation)
   .get([authenticatedUser], getAllConsultations);
+
+router
+  .route('/consultation/paid')
+  .get([authenticatedUser], getPaidConsultations);
 
 router
   .route('/consultation/:id')

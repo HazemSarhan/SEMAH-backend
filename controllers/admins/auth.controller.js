@@ -8,7 +8,7 @@ import createTokenUser from '../../utils/createTokenUser.js';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { sendEmail } from '../../configs/sendgridConfig.js';
-import { token } from 'morgan';
+// import { sendEmail } from '../../configs/awsConfig.js';
 
 export const registerAdmin = async (req, res) => {
   const { name, email, password, phoneNumber } = req.body;
