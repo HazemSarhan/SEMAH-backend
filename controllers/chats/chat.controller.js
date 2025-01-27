@@ -167,6 +167,19 @@ export const sendMessage = async (req, res) => {
     },
   });
 
+  const io = req.app.get('io');
+  if (io) {
+    const x = chatId;
+    io.to(Number(chatId)).emit('receive-message', {
+      fileUrl,
+      content,
+      sender: sender,
+      chatId: chatId,
+      createdAt: message.createdAt,
+    });
+    console.log('Message sent successfully');
+  }
+
   res.status(StatusCodes.CREATED).json(message);
 };
 
