@@ -142,15 +142,22 @@ export const sendMessage = async (req, res) => {
   }
 
   let fileUrl = null;
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // => 5MB Max
   if (req.files && req.files.fileUrl) {
-    const result = await cloudinary.uploader.upload(
-      req.files.fileUrl.tempFilePath,
-      {
-        use_filename: true,
-        folder: 'product-images',
-      }
-    );
-    fs.unlinkSync(req.files.fileUrl.tempFilePath);
+    const file = req.files.fileUrl;
+    if (file.size > MAX_FILE_SIZE) {
+      throw new BadRequestError(
+        `File size exceeds the maximum limit of ${
+          MAX_FILE_SIZE / (1024 * 1024)
+        } MB.`
+      );
+    }
+
+    const result = await cloudinary.uploader.upload(file.tempFilePath, {
+      use_filename: true,
+      folder: 'product-images',
+    });
+    fs.unlinkSync(file.tempFilePath);
     fileUrl = result.secure_url;
   }
 

@@ -22,6 +22,7 @@ router
 router
   .route('/:userId')
   .get(authenticatedUser, authorizePermissions('ADMIN'), getChatByUserId);
+
 router
   .route('/:chatId/messages')
   .get(authenticatedUser, getMessages)
