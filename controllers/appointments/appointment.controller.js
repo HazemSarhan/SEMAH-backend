@@ -175,6 +175,9 @@ export const getAllAuthenticatedAppointments = async (req, res) => {
     where: {
       clientId: userId,
     },
+    include: {
+      consultationType: true,
+    },
   });
   if (!appointments) {
     throw new BadRequestError('No appointments found!');

@@ -34,7 +34,11 @@ export const createConsultation = async (req, res) => {
 };
 
 export const getAllConsultations = async (req, res) => {
-  const consultations = await prisma.consultation.findMany({});
+  const consultations = await prisma.consultation.findMany({
+    include: {
+      Appointments: true,
+    },
+  });
   res.status(StatusCodes.OK).json({ consultations });
 };
 
