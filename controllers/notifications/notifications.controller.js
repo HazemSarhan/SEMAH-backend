@@ -26,6 +26,9 @@ export const getAuthenticatedClientNotifications = async (req, res) => {
   const clientId = req.user.userId;
   const notification = await prisma.notification.findMany({
     where: { clientId },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
   if (!notification) {
     throw new BadRequestError('No notification found!');
