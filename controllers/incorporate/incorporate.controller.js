@@ -175,6 +175,9 @@ export const handleIncorporateService = async (req, res) => {
     },
   });
 
+  const redirectUrl = `${process.env.FRONTEND_URL}/myOrders/${order.id}`;
+  // res.redirect(redirectUrl);
+
   res.status(StatusCodes.OK).json({
     order,
     payment,
