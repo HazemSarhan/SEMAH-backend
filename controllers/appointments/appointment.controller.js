@@ -148,9 +148,17 @@ export const handlePaidAppointment = async (req, res) => {
     },
   });
 
-  const redirectUrl = `${process.env.FRONTEND_URL}/myOrders/${order.id}`;
-  // res.redirect(redirectUrl);
-  res.status(StatusCodes.OK).json({ order, chat, appointment });
+  const clientAppointmentNotification = `Your appointment with id: ${appointment.id} and date: ${appointment.date} has been booked successfully!`;
+  const clientNotification = await prisma.notification.create({
+    data: {
+      content: clientAppointmentNotification,
+      clientId,
+    },
+  });
+
+  const redirectUrl = `${process.env.FRONTEND_URL}/myDates/${appointment.id}`;
+  res.redirect(redirectUrl);
+  // res.status(StatusCodes.OK).json({ order, chat, appointment });
 };
 
 export const getAllAppointments = async (req, res) => {
