@@ -46,20 +46,29 @@ export const getAllIncorporates = async (req, res) => {
 };
 
 export const getIncorporateServiceById = async (req, res) => {
-  let { anotherLocation, outsideKSA } = req.query;
+  let { anotherLocation, outsideKSA, activityType } = req.query;
 
-  var isTrueSet = String(outsideKSA).toLowerCase() === 'true';
+  const filters = {};
+
+  if (outsideKSA !== undefined) {
+    filters.outsideKSA = String(outsideKSA).toLowerCase() === 'true';
+  }
+
+  if (activityType) {
+    filters.activityType = activityType;
+  }
+
+  if (anotherLocation) {
+    filters.anotherLocation = anotherLocation;
+  }
 
   const incorporate = await prisma.incorporationServices.findMany({
-    where: {
-      AND: [{ outsideKSA: isTrueSet }, { anotherLocation }],
-    },
+    where: filters,
     include: { employees: { select: { id: true, name: true } } },
   });
 
   res.status(StatusCodes.OK).json({ incorporate });
 };
-
 export const purchaseIncorporateService = async (req, res) => {
   const clientId = req.user.userId;
   const { incorporateId } = req.body;
