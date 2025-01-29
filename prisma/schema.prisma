@@ -88,6 +88,9 @@ model Commissioner {
   serviceItem ServiceItem[]
   client Client @relation(fields: [clientId], references: [id])
   clientId String
+  canAccessMessages Boolean @default(false)
+  canPurchaseServices Boolean @default(false)
+  role String @default("COMMISSIONER")
   orders Order[]
   chats Chat[]
   tokens Token[]

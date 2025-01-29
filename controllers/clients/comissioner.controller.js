@@ -123,6 +123,8 @@ export const showCurrentCommissioner = async (req, res) => {
       identityNumber: true,
       phoneNumber: true,
       clientId: true,
+      canAccessMessages: true,
+      canPurchaseServices: true,
     },
   });
   if (!commissioner) {
@@ -149,8 +151,15 @@ export const getCommissionerById = async (req, res) => {
 };
 
 export const updateCommissioner = async (req, res) => {
-  const { name, identityNumber, phoneNumber, password, serviceItemId } =
-    req.body;
+  const {
+    name,
+    identityNumber,
+    phoneNumber,
+    password,
+    serviceItemId,
+    canAccessMessages,
+    canPurchaseServices,
+  } = req.body;
   const clientId = req.user.userId;
   if (!req.user.role) {
     throw new UnauthorizedError('Unauthorized to access this route');
@@ -179,6 +188,12 @@ export const updateCommissioner = async (req, res) => {
   if (password) {
     const salt = await bcrypt.genSalt(10);
     updateData.password = await bcrypt.hash(password, salt);
+  }
+  if (canAccessMessages) {
+    updateData.canAccessMessages = Boolean(canAccessMessages);
+  }
+  if (canPurchaseServices) {
+    updateData.canPurchaseServices = Boolean(canPurchaseServices);
   }
 
   const client = await prisma.client.findUnique({

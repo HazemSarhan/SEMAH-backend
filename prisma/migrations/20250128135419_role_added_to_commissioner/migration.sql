@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Commissioner" ADD COLUMN     "role" TEXT NOT NULL DEFAULT 'COMMISSIONER';

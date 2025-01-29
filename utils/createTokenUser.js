@@ -8,6 +8,8 @@ const createTokenUser = (user) => {
     phoneNumber: user.phoneNumber,
     customerClass: user.customerClass,
     isVerified: user.isVerified,
+    canAccessMessages: user.canAccessMessages,
+    canPurchaseServices: user.canPurchaseServices,
   };
 };
 

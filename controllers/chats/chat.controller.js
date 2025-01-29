@@ -155,7 +155,7 @@ export const sendMessage = async (req, res) => {
 
     const result = await cloudinary.uploader.upload(file.tempFilePath, {
       use_filename: true,
-      folder: 'product-images',
+      folder: 'SEMAH-Chats',
     });
     fs.unlinkSync(file.tempFilePath);
     fileUrl = result.secure_url;
