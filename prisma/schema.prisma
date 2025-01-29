@@ -117,6 +117,7 @@ model Employee {
   consultations Consultation[]
   tokens Token[]
   notifications Notification[]
+  incorporateServices IncorporationServices[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -223,6 +224,8 @@ model OrderItem {
   serviceItemId Int?
   consultation Consultation? @relation(fields: [consultationId], references: [id])
   consultationId Int?
+  incorporationServices IncorporationServices? @relation(fields: [incorporationServiceId], references: [id])
+  incorporationServiceId Int?
   priceAtTime Float
   quantity Int @default(1)
   createdAt DateTime @default(now())
@@ -236,6 +239,8 @@ model Chat {
   serviceItemId Int?
   appointment Appointment? @relation(fields: [appointmentId], references: [id])
   appointmentId Int?
+  incorporationService IncorporationServices? @relation(fields: [incorporationServiceId], references: [id])
+  incorporationServiceId Int?
   client      Client    @relation(fields: [clientId], references: [id])
   clientId    String
   employee    Employee  @relation(fields: [employeeId], references: [id])
@@ -290,6 +295,35 @@ model Consultation {
   price Float @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+}
+
+model IncorporationServices {
+  id Int @id @default(autoincrement())
+  name String @default("Incorporate Services")
+  activityType ActivityTypes
+  outsideKSA Boolean
+  anotherLocation IncorporationLocations?
+  price Float
+  contract String?
+  orderItems OrderItem[]
+  chats Chat[]
+  employees Employee[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum IncorporationLocations {
+  EGYPT
+  OMAN
+  UAE
+}
+
+enum ActivityTypes {
+  SERVICE_ACTIVITY
+  INDUSTRIAL_ACTIVITY
+  BUSINESS_ACTIVITY
+  AGRICULTURAL_ACTIVITY
+  PROFESSIONAL_ACTIVITY
 }
 
 enum AppointmentTypes {

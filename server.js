@@ -48,6 +48,7 @@ import chatRoutes from './routes/chats/chat.routes.js';
 import consultationRoutes from './routes/appointments/consultation.routes.js';
 import appointmentRoutes from './routes/appointments/appointment.routes.js';
 import notificationRoutes from './routes/notifications/notifications.routes.js';
+import incorporateRoutes from './routes/incorporate/incorporate.routes.js';
 
 app.set('trust proxy', 1);
 app.use(morgan('dev'));
@@ -98,6 +99,9 @@ app.use('/api/v1/appointments', appointmentRoutes);
 
 // Notifications
 app.use('/api/v1/notifications', notificationRoutes);
+
+// Incorporate Services
+app.use('/api/v1/incorporate', incorporateRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
