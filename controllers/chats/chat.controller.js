@@ -22,6 +22,7 @@ export const getChats = async (req, res) => {
         employee: { select: { name: true, email: true } },
         appointment: true,
         client: { select: { commissioner: true } },
+        incorporationService: true,
       },
     });
 
