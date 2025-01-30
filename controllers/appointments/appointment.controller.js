@@ -192,3 +192,28 @@ export const getAllAuthenticatedAppointments = async (req, res) => {
   }
   res.status(StatusCodes.OK).json({ appointments });
 };
+
+export const getAuthenticatedAppointmentById = async (req, res) => {
+  const userId = req.user.userId;
+  const appointmentId = parseInt(req.params.id, 10); // Use "id" instead of "appointmentId"
+
+  if (isNaN(appointmentId)) {
+    throw new BadRequestError('Invalid appointment ID');
+  }
+
+  const appointment = await prisma.appointment.findUnique({
+    where: {
+      id: appointmentId,
+      clientId: userId,
+    },
+    include: {
+      consultationType: true,
+    },
+  });
+
+  if (!appointment) {
+    throw new NotFoundError('Appointment not found');
+  }
+
+  res.status(StatusCodes.OK).json({ appointment });
+};

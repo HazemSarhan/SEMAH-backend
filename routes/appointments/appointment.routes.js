@@ -5,6 +5,7 @@ import {
   getAppointmentById,
   handlePaidAppointment,
   getAllAuthenticatedAppointments,
+  getAuthenticatedAppointmentById,
 } from '../../controllers/appointments/appointment.controller.js';
 import {
   authenticatedUser,
@@ -21,8 +22,9 @@ router
   .route('/myAppointments')
   .get([authenticatedUser], getAllAuthenticatedAppointments);
 
+router.route('/:id').get([authenticatedUser, getAppointmentById]);
 router
-  .route('/:id')
-  .get([authenticatedUser, authorizePermissions('ADMIN'), getAppointmentById]);
+  .route('/myAppointments/:id')
+  .get(authenticatedUser, getAuthenticatedAppointmentById);
 
 export default router;
